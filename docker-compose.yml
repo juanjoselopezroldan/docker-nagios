@@ -1,0 +1,33 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.6
+    ports:
+      - 3306:3333
+    volumes:
+    - ./volumes/mysql:/var/lib/mysql:rw,z
+    environment:
+      - MYSQL_USER=nagios
+      - MYSQL_PASSWORD=nagios
+      - MYSQL_ADDRESS=nagios_mysql
+      - MYSQL_DATABASE=nagios
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
+  nagios:
+    image: juanjoselo/nagios
+    ports:
+      - 80:80
+    volumes:
+    - ./volumes/nagiosetc:/opt/nagios/etc:rw,z
+    - ./volumes/nagiosvar:/opt/nagios/var:rw,z
+    environment:
+      - NAGIOSADMIN_USER=nagiosadmin
+      - NAGIOSADMIN_PASS=nagiosadmin
+    links:
+      - mysql
+
+
+volumes:
+    nagiosetc:
+    nagiosvar:
+    mysql:
